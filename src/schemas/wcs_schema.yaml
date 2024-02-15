@@ -1,0 +1,127 @@
+import typing
+import yaml
+
+
+class WCSchemas:
+    """
+    This class contains the definitions for the world coordinate system
+    for the coronograph science camera, the
+    LLOWFS, and the context camera. These are values that are common
+    to all the instruments and are written to the Primary header of
+    the output fits files. 
+    These values are still TBD - JEM is not not sure if all are needed.
+    For now this schema is kep separate from the core schema until
+    we understand what we need. 
+
+    In all cases, efforts have been made to follow the FITS standard
+    (https://fits.gsfc.nasa.gov/standard40/fits_standard40aa-le.pdf).
+
+    Units shall be consistent with AstroPy units.
+    """
+
+    def get_sci_wcs_schema() -> dict[str, typing.Any]:
+        """
+        Defines the metadata (fits headers) associated with all data
+        """
+
+        schema_yaml = """
+        $schema: http://json-schema.org/draft-07/schema#
+        $id: get_sci_wcs_schema.yaml
+        title: WCS Schema
+        description: Basic definition of the science metadata.
+          WCS:
+            title: World Coordinate Varibles 
+            type: object
+            properties:
+              RADESYS: 
+                extention: 0
+                description: Name of the coordinate reference frame
+                type: string
+                value: 'ICRS'
+                comment:
+              WCSAXES: 
+                extention: 0
+                description: number of World Coordinate System axes
+                type: integer
+                units: 
+                value: 2
+                comment:
+              CRPIX1: 
+                extention: 0
+                description: axis 1 coordinate of the reference pixel
+                type: number
+                units: pix
+                value: 1024.5
+                comment:
+              CRPIX2: 
+                extention: 0
+                description: axis 2 coordinate of the reference pixel
+                type: number
+                units: pix
+                value: 1024.5
+                comment:
+              CRVAL1: 
+                extention: 0
+                description: first axis value at the reference pixel
+                type: number
+                units: 
+                value: 
+                comment:
+              CRVAL2: 
+                extention: 0
+                description: second axis value at the reference pixel
+                type: number
+                units: 
+                value: 
+                comment:
+              CTYPE1: 
+                extention: 0
+                description: first axis coordinate type
+                type: string
+                value: 
+                comment:
+            CTYPE2: 
+                extention: 0
+                description: second axis coordinate type
+                type: string
+                value: 
+                comment:
+            CUNIT1: 
+                extention: 0
+                description: first axis units
+                type: string
+                value: 'deg'
+                comment:
+            CUNIT2: 
+                extention: 0
+                description: second axis units
+                type: string
+                value: 'deg'
+                comment:
+            CD1_1: 
+                extention: 0
+                description: linear transformation matrix element, CD matrix
+                type: real
+                value: 
+                comment:
+            CD1_2: 
+                extention: 0
+                description: linear transformation matrix element, CD matrix
+                type: real
+                value: 
+                comment:
+            CD2_1: 
+                extention: 0
+                description: linear transformation matrix element, CD matrix
+                type: real
+                value: 
+                comment:
+            CD2_2: 
+                extention: 0
+                description: linear transformation matrix element, CD matrix
+                type: real
+                value: 
+                comment:
+        """
+        return yaml.safe_load(schema_yaml)
+

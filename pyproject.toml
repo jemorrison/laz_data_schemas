@@ -1,0 +1,29 @@
+[project]
+name = "schemas"
+description = "Core schemas used for esc pipelines."
+requires-python = ">=3.9"
+classifiers = [ "Programming Language :: Python :: 3" ]
+dynamic = [ 'version' ]
+dependencies = [
+  'astropy',
+  'git'
+]
+
+[project.license]
+file = "LICENSE"
+content-type = "text/plain"
+
+[build-system]
+requires = [ "setuptools", "setuptools_scm"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.dynamic]
+version = { attr = "setuptools_scm.get_version" }
+
+[tool.setuptools.packages.find]
+where = [ "src" ]
+include = ["schemas"]
+namespaces = false
+
+[tool.setuptools_scm]
+write_to = "src/schemas/_version.py"
