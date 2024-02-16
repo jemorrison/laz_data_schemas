@@ -5,8 +5,7 @@ requires-python = ">=3.9"
 classifiers = [ "Programming Language :: Python :: 3" ]
 dynamic = ["version"]
 dependencies = [
-  'astropy',
-  'git'
+  'astropy'
 ]
 
 [project.license]
