@@ -1,6 +1,5 @@
 import typing
 import yaml
-#import sim_schema.yaml
 
 class CoreSchemas:
     """
@@ -21,6 +20,7 @@ class CoreSchemas:
 
     def get_sci_core_schema() -> dict[str, typing.Any]:
         """
+
         Defines the metadata (fits headers) associated with all data
         """
 
@@ -36,7 +36,7 @@ class CoreSchemas:
             type: boolean
             description: conforms to FITS standard
             units: dimensionless
-            value: T
+            value: True
             comment: 
           BITPIX:
             extension: 0
@@ -185,7 +185,7 @@ class CoreSchemas:
           WAVELEN:
             extension: 0
             description: Central wavelength in meters
-            type: string
+            type: number
             units: meters
             value:
           FILTER:
@@ -194,89 +194,99 @@ class CoreSchemas:
             type: string
             units: null
             value:
-          DARKHOLE:
-            title: Dark hole parameters
-            type: object
-            properties:
-              DHSAXIS:
-                extension: 0
-                description: Dark hole axis of symmetry
-                type: number
-                units: deg
-                value: 10
-              INNWA:
-                extension: 0
-                type: number
-                description: inner working angle 
-                units: 
-                value: 20
-                comment: 
-              OUTWA:
-                extension: 0
-                type: number
-                description: outer working angle 
-                units: 
-                value: 30
-                comment:
-          ISR:
-            title: Instrument Signature Removal Schema
-            type: object
-            properties:
-              S_DARK:
-                extension: 0
-                description: Boolen value if dark step is applied
-                type: boolean
-                value: None
-                comment:
-              S_BIAS:
-                extension: 0
-                description: Boolen value if bias step is applied
-                type: boolean
-                value: None
-                comment:
-              S_FLAT:
-                extension: 0
-                description: Boolen value if flat step is applied
-                type: boolean
-                value: None
-                comment:
-              S_BADPIX:
-                extension: 0
-                description: Boolen value if flagging of bad pixels step is applied
-                type: boolean
-                value: None
-                comment:
-              R_DARK:
-                extension: 0
-                description: Name of Dark reference file 
-                type: string
-                value: None
-                comment:
-              R_BIAS:
-                extension: 0
-                description:  Name of Bias reference file 
-                type: string 
-                value: None
-                comment:
-              R_FLAT:
-                extension: 0
-                description: Name of Flat reference file
-                type: string
-                value: None
-                comment:
-              R_BADPIX:
-                extension: 0
-                description: Name of Bad Pixel reference file
-                type: string 
-                value: None
-                comment:
-              VER_PREPR:
-                extension: 0
-                description: Version of the preprocessing software
-                type: number 
-                value: 0.1
-                comment:
+          DHSAXIS:
+            extension: 0
+            description: Dark hole axis of symmetry
+            type: number
+            units: deg
+            value:
+          INNWA:
+            extension: 0
+            type: number
+            description: inner working angle 
+            units: 
+            value:
+            comment: 
+          OUTWA:
+            extension: 0
+            type: number
+            description: outer working angle 
+            units: 
+            value:
+            comment:
+          S_DARK:
+            extension: 0
+            description: Boolen value if dark step is applied
+            type: boolean
+            value: False
+            comment:
+          S_BIAS:
+            extension: 0
+            description: Boolen value if bias step is applied
+            type: boolean
+            value: False
+            comment:
+          S_FLAT:
+            extension: 0
+            description: Boolen value if flat step is applied
+            type: boolean
+            value: False
+            comment:
+          S_BADPIX:
+            extension: 0
+            description: Boolen value if flagging of bad pixels step is applied
+            type: boolean
+            value: False
+            comment:
+          R_DARK:
+            extension: 0
+            description: Name of Dark reference file 
+            type: string
+            value: None
+            comment:
+          R_BIAS:
+            extension: 0
+            description:  Name of Bias reference file 
+            type: string 
+            value: None
+            comment:
+          R_FLAT:
+            extension: 0
+            description: Name of Flat reference file
+            type: string
+            value: None
+            comment:
+          R_BADPIX:
+            extension: 0
+            description: Name of Bad Pixel reference file
+            type: string 
+            value: None
+            comment:
+          VER_PREP:
+            extension: 0
+            description: Version of the preprocessing software
+            type: number 
+            value: 0.1
+            comment:
         additionalProperties: False
         required: [IMGTYPE]     
         """
-        return yaml.safe_load(schema_yaml)
+
+        #return yaml.safe_load(schema_yaml)
+        schema_yaml = yaml.safe_load(schema_yaml)
+    
+        # set any defaults defined in schema.
+        # loop over the core schema
+        main_dic = schema_yaml['properties']
+        for key,values in main_dic.items():
+            value = schema_yaml.get(key)
+            if values.get('properties'):  # this is a nested dictionary
+                sec_dic = schema_yaml['properties'][key]['properties']
+                for key2,value2 in sec_dic.items():
+                    default_value = main_dic[key]['properties'][key2]['value'] # grab the default value
+                    schema_yaml.update({key:{key2: default_value}})
+            else:
+                default_value = main_dic[key]['value']
+                schema_yaml.update({key:default_value})
+
+        return schema_yaml

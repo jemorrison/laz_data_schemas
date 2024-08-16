@@ -133,6 +133,7 @@ class EscImageSchemas:
                 units: 
                 value: 
                 comment:
+        additionalProperties: False
         """
         return yaml.safe_load(schema_yaml)
     
