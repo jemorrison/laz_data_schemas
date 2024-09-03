@@ -85,6 +85,13 @@ class DarkSchemas:
             units:
             value: 's'
             comment: 
+          USEAFTER:
+            extension: 0
+            type: string
+            description: date that defines when file is valid
+            units:
+            value:
+            comment: 
           FILENAME:
             extension: 0
             type: string
