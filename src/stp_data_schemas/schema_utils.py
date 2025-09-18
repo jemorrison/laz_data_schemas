@@ -3,13 +3,12 @@ import os
 import yaml
 import typing
 import jsonschema
+from jsonschema import validate, RefResolver, ValidationError
 
-def test_schema_yaml(configuration_file, _schema_template) -> bool:
+def validate_schema_yaml(configuration_file, _schema_template) -> bool:
     """
     Validate an existing configuration files against a schema using a yaml file. 
-    The configuration file is a yaml file. The method was used before all the values
-    were provided by the simulator in the header. 
-    Keep this method for now. We might not need it. 
+    The configuration file is a yaml file. 
 
     Parameters
     ----------
@@ -51,70 +50,41 @@ def test_schema_yaml(configuration_file, _schema_template) -> bool:
         raise
 
     status = True
-
     return status, config_data
 
 
-def test_schema_dict(data_dict, _schema_template) -> bool:
+def validate_schema_dict(data_dict: dict, schema_template: dict) -> bool:
     """
-    Validate an existing files against a schema.
+    Validate a dictionary against a schema.
 
     Parameters
     ----------
-
         data_dict : `dict`
             Dictionary containing information to be validated.
 
         schema_template : `dict`
             Configuration schema to be validated against.
-
     Raises
     ------
-
         ValidationError:
             If proposed validation file is not compatible with the schema.
-
     Returns
     -------
-
         output : `boolean`
             True if successful.
 
     """
 
-    status = False
-
     try:
-        jsonschema.validate(data_dict, _schema_template)
-    except jsonschema.exceptions.ValidationError:
-        print("Schema not valid.\n")
-        raise
+        # Corrected call with the schema keyword argument
+        validate(instance=data_dict, schema=schema_template)
+        print("Data configuration is valid.")
+        return True # Return True immediately upon success
+    except jsonschema.exceptions.ValidationError as e:
+        print(f"Configuration is invalid: {e.message}")
+        raise # Re-raise the exception to stop execution
 
-    status = True
-
-    return status
 
 
-def set_defaults_schema(schema):
-    # set any defaults defined in schema.
-
-    # loop over the core schema
-    main_dic = schema['properties']
-    for key,values in main_dic.items():
-        value = schema.get(key)
-        print('value', key, values, value)
-        if values.get('properties'):  # this is a nested dictionary
-            sec_dic = schema['properties'][key]['properties']
-            for key2,value2 in sec_dic.items():
-                print(key2,value2)
-                default_value = main_dic[key]['properties'][key2]['value'] # grab the default value
-                print('default_value', default_value)
-                schema.update({key:{key2: default_value}})
-        else:
-            default_value = main_dic[key]['value']
-            schema.update({key:default_value})
-            print('default_value', default_value)
-
-    return schema
 
 

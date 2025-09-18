@@ -1,0 +1,55 @@
+$schema: http://json-schema.org/draft-07/schema#
+$id: get_level3_schema.yaml
+title: Science Image Level 3 Schema 
+description: Definition of the science image level 3 FITS file and metadata. Extentions are zero indexed.
+type: object
+properties:
+  NAXIS:
+    extension: 1
+    type: integer
+    description: See FITS standard documentation
+    units: pix
+    value: 3
+    comment:
+  NAXIS1:
+    extension: 1
+    type: integer
+    description: See FITS standard documentation
+    units: pix
+    value: 
+    comment:
+  NAXIS2:
+    extension: 1
+    type: integer
+    description: See FITS standard documentation
+    units: pix
+    value: 
+    comment:
+  NAXIS3:
+    extension: 1
+    type: integer
+    description: See FITS standard documentation
+    units: pix
+    value: 
+    comment:
+  data:
+    type: array
+    description: Represents 2D science data array
+    items:
+      type: array
+      items:
+        type: number
+  error:
+    type: array
+    description: Represents 2D error array
+    items:
+      type: array
+      items:
+        type: number
+  dq:
+    type: array
+    description: Represents 2D dq array
+    items:
+      type: array
+        items:
+          type: integer
