@@ -1,0 +1,40 @@
+$schema: http://json-schema.org/draft-2020-12/schema#
+$id: dqmask_image_schema.yaml
+title: Science Image Dqmask Schema 
+description: Definition of the dqmask
+type: object
+required: [NAXIS, NAXIS1, NAXIS2, mask]
+properties:
+  meta:
+    $ref: 'reference.yaml' 
+  NAXIS:
+    type: object
+    properties:
+      value:
+        type: integer
+      description:
+        type: string
+        default: Number of array dimensions
+  NAXIS1:
+    type: object
+    properties:
+      value:
+        type: integer
+      description:
+        type: string
+        default: size of x axis
+  NAXIS2:
+    type: object
+    properties:
+      value:
+        type: integer
+      description:
+        type: string
+        default: size of y axis  
+  mask:
+    type: array
+    description: Represents 2D dqmask array
+    items:
+      type: array
+      items:
+       type: number

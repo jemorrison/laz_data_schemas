@@ -1,0 +1,611 @@
+$schema: http://json-schema.org/draft-2020-12/schema#
+$id: core_schema.yaml
+title: Science Core Schema
+description: Basic definition of the science metadata.
+type: object
+properties:
+  SIMPLE:
+    type: object
+    properties:
+      value:
+        type: boolean
+        default: True
+      description: 
+        type: string
+        default: conforms to FITS standard
+  BITPIX:
+    type: object
+    properties:
+      value:
+        type: [integer,string]
+        default: 'N/A'
+      description:
+        type: string
+        default: array data type
+  TELESCOP:
+    type: object
+    properties:
+      value: 
+        type: string
+        default: 'STP'
+      description: 
+        type: string
+        default: Telescope used to acquire data
+  INSTRUME:
+    type: object
+    properties:
+      value:
+        type: string
+        enum: ['ESC', 'LLOWFS', 'WCC', 'CC']
+      description:
+        type: string
+        default: Instrument
+  PROGMID:
+    type: object
+    properties:
+      value:
+        type: string
+        default: '000'
+      description:
+        type: string
+        default:  Program designation
+  ORIGIN:
+    type: object
+    properties:
+      value: 
+        type: string
+        enum: ['UASIM', 'FLIGHT']
+      description:
+        type: string
+        default:  Origin of data
+  DATE:
+    type: object
+    properties:
+      value:
+        type: string
+      description:
+        type: string
+        default: date of file creation. Format yyyy-mm-ddTHH:MM:SS[.sss]
+  TIMESYS:
+    type: object
+    properties:
+      value:
+        type: string
+      description:
+        type: string
+        default: principal time system for time-related keywords. UTC for Science data
+  TIMEUNIT:
+    type: object
+    properties:
+      value:
+        type: string
+      description:
+        type: string
+        default: Default unit applicable to all time values
+  DATE_OBS:
+    type: object
+    properties:
+      value:
+        type: string
+      description:
+        type: string
+        default: yyyy-mm-dd UTC data at start of exposure
+  TIME_OBS:
+    type: object
+    properties:
+      value:
+        type: string
+      description:
+        type: string
+        default: hh.mm.ss.sss UTC data at start of exposure
+  DATE_BEG:
+    type: object
+    properties:
+      value:
+        type: string
+      description:
+        type: string
+        default: Date-time start of exposure
+        comment: yyyy-mm-ddTHH:MM:SS[.sss]
+  DATE_END:
+    type: object
+    properties:
+      value:
+        type: string
+      description:
+        type: string
+        default: Date-time end of exposure
+        comment: yyyy-mm-ddTHH:MM:SS[.sss]
+  FILENAME:
+    type: object
+    properties:
+      value:
+        type: string
+      description:
+        type: string
+        default: Name of file
+  SOURCE:
+    type: object
+    properties:
+      value:
+        type: string
+        enum: ["mono_632", "sc_laser", "target"]
+        default: 'target'
+      description:
+        type: string
+        default: Type of source
+  TARGET:
+    type: object
+    properties:
+      value:
+        type: string
+        default: 'N/A'
+      description:
+        type: string
+        default: Name of target. Names should conform to HD numbers.
+  OBSID:
+    type: object
+    properties:
+      value:
+        type: string
+        default: 'N/A'
+      description:
+        type: string
+        default: Observation ID
+  OBSCOUNT:
+    type: object
+    properties:
+      value:
+        type:  integer
+        default: 1
+        minimum: 1
+      description:
+        type: string
+        default: Running counter on observation number
+  NOBS:
+    type: object
+    properties:
+      value:
+        type: integer
+        default: 1
+        minimum: 1
+      description:
+        type: string
+        default: Total number of observations for program
+  VISITID:
+    type: object
+    properties:
+      value:
+        type: string
+        default: 'N/A'
+      description: 
+        type: string
+        default: VisitID
+  SEQID:
+    type: object
+    properties:
+      value:
+        type: string
+        default:  'N/A'
+      description: 
+        type: string
+        default: SEQUENCE ID
+  EXPID:
+    type: object
+    properties:
+      value:
+        type: string
+        default: '0'
+      description: 
+        type: string
+        default: Expoure ID, rolling number from 1 to n (number of exposures)
+  EXPCOUNT:
+    type: object
+    properties:
+      value:
+        type: integer
+        default: 1
+        minimum: 1
+      description:
+        type: string
+        default: Running counter on exposure number
+  NEXP:
+    type: object
+    properties:
+      value:
+        type: integer
+        default: 1
+        minimum: 1
+      description: 
+        type: string
+        default: Number of exposures for each dark hole position
+  IMGTYPE:
+    type: object
+    properties:
+      value:
+        type: string
+        enum:  ['DARK', 'BIAS', 'FLAT', 'OBJECT', 'ENGTEST']
+      description:
+        type: string
+        default: Type of image OBJECT, DARK, BIAS, FLAT, ENGTEST
+  EXPTIME:
+    type: object
+    properties:
+      value:
+        type: integer
+      description:
+        type: string
+        default: Commanded exposure time in seconds
+  XPOSURE:
+    type: object
+    properties:
+      value:
+        type: integer
+        default: 0
+      description:
+        type: string
+        default: Effective exposure time
+  ROLLPA:
+    type: object
+    properties:
+      value:
+        type: [number,string]
+        default: 'N/A'
+      description:
+        type: string
+        default: position angle of roll.
+  ROLCOUNT:
+    type: object
+    properties:
+      value:
+        type: integer
+        minimum: 1
+        default: 1
+      description:
+        type: string
+        default: Running counter on ROLL PA
+  NPOSANG:
+    type: object
+    properties:
+      value:
+        type: integer
+        minimum: 1
+        default: 1
+      description:
+        type: string
+        default: Number of roll angles for observation
+  NPOSDH:
+    type: object
+    properties:
+      value:
+        type: integer
+        default: 1 
+        minimum: 1
+      description:
+        type: string
+        default: Number of Dark Holes
+  WAVELEN:
+    type: object
+    properties:
+      value:
+        type: [number,string]
+        default:  'N/A'
+      description:
+        type: string
+        default: Wavelength
+  FILTER:
+    type: object
+    properties:
+      value:
+        type: string
+        default: 'N/A'
+      description:
+        type: string
+        default: Filter
+  DHSAXIS:
+    type: object
+    properties:
+      value:
+        type: number
+        default: 0
+      description:
+        type: string
+        default: Dark Hole axis of symmetry
+  DHCOUNT:
+    type: object
+    properties:
+      value:
+        type: integer
+        default: 1
+        minimum: 1
+      description:
+        type: string
+        default: Running counter on number of dark holes to dig
+  INNWA:
+    type: object
+    properties:
+      value:
+        type: number
+        default: 0 
+      description:
+        type: string
+        default:  Inner working angle
+  OUTWA:
+    type: object
+    properties:
+      value:
+        type: number
+        default: 0 
+      description:
+        type: string
+        default:  Outer working angle
+  RADESYS:
+    type: object
+    properties:
+      value:
+        type: string
+        default: ICRS
+      description:
+        type: string
+        default: Name of the coordinate reference frame
+  RA_PROP:
+    type: object
+    properties:
+      value:
+        type: [number, string]
+        default:  'N/A'
+      description: 
+        type: string
+        default: Proposer RA
+  RA_TARG:
+    type: object
+    properties:
+      value:
+        type: [number, string]
+        default:  'N/A'
+      description:
+        type: string
+        default:  Commanded RA
+  URATARG:
+    type: object
+    properties:
+      value:
+        type: [number, string]
+        default:  'N/A'
+      description:
+        type: string
+        default: uncertainty on RA_TARG 
+  RA_MU:
+    type: object
+    properties:
+      value:
+        type: [number,string]
+        default:  'N/A'
+      description:
+        type: string
+        default: RA proper motion in arcsec/year
+  DEC_PROP:
+    type: object
+    properties:
+      value:
+        type: [number, string]
+        default:  'N/A'
+      description:
+        type: string
+        default: Proposer Dec 
+  DEC_TARG:
+    type: object
+    properties:
+      value:
+        type: [number, string]
+        default:  'N/A'
+      description:
+        type: string
+        default: Commanded Dec 
+  UDECTARG:
+    type: object
+    properties:
+      value:
+        type: [number, string]
+        default:  'N/A'
+      description:
+        type: string
+        default: uncertainty on Dec_TARG 
+  DEC_MU:
+    type: object
+    properties:
+      value:
+        type: [number, string]
+        default:  'N/A'
+      description:
+        type: string
+        default: Dec proper motion in arcsec/year
+  EPOCH_MU:
+    type: object
+    properties:
+      value:
+        type: [number, string]
+        default:  'N/A'
+      description:
+        type: string
+        default: target proper motion epoch
+  GS_INDEX:
+    type: object
+    properties:
+      value:
+        type: [integer,string]
+        default:  'N/A'
+      description:
+        type: string
+        default: Index of guide star within list of selected GS
+  GSSTARID:
+    type: object
+    properties:
+      value:
+        type: [integer, string]
+        default:  'N/A'
+      description:
+        type: string
+        default: Index of guide star within list of selected GS
+  GS_RA:
+    type: object
+    properties:
+      value:
+        type: [number, string]
+        default: 'N/A'
+      description:
+        type: string
+        default: Guide star right ascension
+  GS_DEC:
+    type: object
+    properties:
+      value:
+        type: [number, string]
+        default: 'N/A'
+      description:
+        type: string
+        default: Guide star declination
+  GS_URA:
+    type: object
+    properties:
+      value:
+        type: [number, string]
+        default: 'N/A'
+      description:
+        type: string
+        default: Guide star right ascension uncertainity
+  GS_UDEC:
+    type: object
+    properties:
+      value:
+        type: [number, string]
+        default: 'N/A'
+      description:
+        type: string
+        default: Guide star declination uncertainity
+  GS_MAG:
+    type: object
+    properties:
+      value:
+        type: [number, string]
+        default: 'N/A'
+      description:
+        type: string
+        default: Guide star magnitude in Sloan R 
+  GS_UMAG:
+    type: object
+    properties:
+      value:
+        type: [number, string]
+        default: 'N/A'
+      description:
+        type: string
+        default: Guide star uncertainity magnitude in Sloan R
+  GS_PA:
+    type: object
+    properties:
+      value:
+        type: [number, string]
+        default: 'N/A'
+      description:
+        type: string
+        default: Guide Star position angle
+  S_DARK:
+    type: object
+    properties:
+      value:
+        type: boolean
+        default: False
+      description:
+        type: string
+        default: Boolen value if dark step is applied
+  S_BIAS:
+    type: object
+    properties:
+      value:
+        type: boolean
+        default: False
+      description:
+        type: string
+        default: Boolen value if bias step is applied
+  S_FLAT:
+    type: object
+    properties:
+      value:
+        type: boolean
+        default: False
+      description:
+        type: string
+        default: Boolen value if flat step is applied
+  S_BADPIX:
+    type: object
+    properties:
+      value:
+        type: boolean
+        default: False
+      description:
+        type: string
+        default: Boolen value if flagging of bad pixels step is applied
+  S_SAT:
+    type: object
+    properties:
+      value:
+        type: boolean
+        default: False
+      description:
+        type: string
+        default: Boolen value if saturationstep is applied
+  R_DARK:
+    type: object
+    properties:
+      value:
+        type: string
+        default: 'N/A'
+      description:
+        type: string
+        default: Name of Dark reference file 
+  R_BIAS:
+    type: object
+    properties:
+      value:
+        type: string
+        default: 'N/A'
+      description:
+        type: string
+        default: Name of Bias reference file 
+  R_FLAT:
+    type: object
+    properties:
+      value:
+        type: string
+        default: 'N/A'
+      description:
+        type: string
+        default: Name of Flat reference file
+  R_BADPIX:
+    type: object
+    properties:
+      value:
+        type: string
+        default: 'N/A'
+      description:
+        type: string
+        default: Name of Bad Pixel reference file
+  R_SAT:
+    type: object
+    properties:
+      value:
+        type: string
+        default: 'N/A'
+      description:
+        type: string
+        default: Name of Saturation reference file
+  VER_PREP:
+    type: object
+    properties:
+      value:
+        type: string
+        default: '1.0.0'
+      description:
+        type: string
+        default:  Version of the preprocessing software
