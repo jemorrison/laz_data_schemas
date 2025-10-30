@@ -1,12 +1,12 @@
 $schema: http://json-schema.org/draft-2020-12/schema#
-$id: esc_image1_schema.yaml
-title: Science Image Level 1 Schema 
-description: Definition of the science image level 1 FITS file and metadata. Extensions are zero indexed.
+$id: dqmask_image_schema.yaml
+title: Science Image Dqmask Schema 
+description: Definition of the dqmask
 type: object
-required: [NAXIS, NAXIS1, NAXIS2, data, error, dq]
+required: [NAXIS, NAXIS1, NAXIS2, sat, nonlin]
 properties:
   meta:
-    $ref: 'core_schema.yaml' 
+    $ref: 'reference_schema.yaml' 
   NAXIS:
     type: object
     properties:
@@ -31,24 +31,17 @@ properties:
       description:
         type: string
         default: size of y axis  
-  data:
+  sat:
     type: array
-    description: Represents 2D science data array
+    description: Represents 2D hard sat array
     items:
       type: array
       items:
        type: number
-  error:
+  nonlin:
     type: array
-    description: Represents 2D science error array
+    description: Represents 2D non-linear saturation array
     items:
       type: array
       items:
-       type: number
-  dq:
-    type: array
-    description: Represents 2D science dq array
-    items:
-      type: array
-      items:
-       type: integer
+       type: number       

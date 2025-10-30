@@ -546,6 +546,15 @@ properties:
       description:
         type: string
         default: Boolen value if flagging of bad pixels step is applied
+  S_SAT:
+    type: object
+    properties:
+      value:
+        type: boolean
+        default: False
+      description:
+        type: string
+        default: Boolen value if saturationstep is applied
   R_DARK:
     type: object
     properties:
@@ -582,6 +591,15 @@ properties:
       description:
         type: string
         default: Name of Bad Pixel reference file
+  R_SAT:
+    type: object
+    properties:
+      value:
+        type: string
+        default: 'N/A'
+      description:
+        type: string
+        default: Name of Saturation reference file
   VER_PREP:
     type: object
     properties:

@@ -3,6 +3,7 @@ import os
 import yaml
 import jsonschema
 from jsonschema import validate, ValidationError
+from importlib.resources import files
 
 class CoreSchemas:
     """
@@ -24,34 +25,31 @@ class CoreSchemas:
     first, you parse the YAML into a Python dictionary, and then you 
     use a validation library to check your data against that dictionary.
     """
-    schema_url = "core_schema.yaml"    
-        
-    def get_sci_core_schema(self, yaml_file_dir: str) -> dict[str, typing.Any]:
+
+    RESOURCE_PACKAGE = 'stp_data_schemas.schemas'
+    REFERENCE_FILE = 'core_schema.yaml'
+    
+    def get_sci_core_schema(self) -> dict[str, typing.Any]:
         """
         Defines the metadata (fits headers) associated with all data.
-
-        Parameters:
-        -----------
-        yaml_file_dir : str
-          Location of the yaml file
 
         Returns:
         -------
         core_dict : dictionary
           Schema converted to dictionary
-        schema_yaml : yaml file
-          Schema of core meta data
         """
-
-        yaml_file_path = os.path.join(yaml_file_dir, self.schema_url)
-
-        # open and load the yaml file
         try:
-            with open(yaml_file_path, 'r') as file:
+            # Get the path object for the reference file
+            schema_path = files(self.RESOURCE_PACKAGE) / self.REFERENCE_FILE
+            
+            # Use the Path object for opening the file
+            with open(schema_path, 'r') as file:
                 schema_yaml = yaml.safe_load(file)
         except FileNotFoundError:
-            print(f"Error: The file '{yaml_file_path}' was not found.")
+            # ... (error handling)
+            print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.REFERENCE_FILE}' was not found.")
             return {}, None
+        
         
         # Convert the yaml information in a dictionary. Set up values and descriptions and default
         # values. 
@@ -80,22 +78,11 @@ class CoreSchemas:
                 # Extract description
                 core_dict[key]['description'] = desc_info.get('default', '')
 
-                # if we add a nested schema in core keep this pull out data
-                # Loop over the nested 'properties' (value, description)
-                #for sub_key, sub_values in sub_properties.items():
-                #    # Extract 'default' and 'description' if they exist
-                #    if 'default' in sub_values:
-                #        core_dict[key][sub_key] = sub_values['default']
-                #    elif 'description' in sub_values:
-                #        core_dict[key][sub_key] = sub_values['description']
-                #    else:
-                #        # If no default or description, use the type
-                #        core_dict[key][sub_key] = sub_values.get('type')
 
-        return core_dict, schema_yaml
+        return core_dict
 
 
-    def validate_core_schema(self, data_dict, schema):
+    def validate_core_schema(self, data_dict):
         """
         Validate a dictionary against a schema 
 
@@ -104,8 +91,6 @@ class CoreSchemas:
         data_dict : `dict`
         Dictionary containing information to be validated.
 
-        schema : yaml schema 
-        Configuration schema to be validated against.
         Raises
         ------
         ValidationError:
@@ -115,6 +100,19 @@ class CoreSchemas:
         output : `boolean`
         True if successful.
         """
+
+        try:
+            # Get the path object for the reference file
+            schema_path = files(self.RESOURCE_PACKAGE) / self.REFERENCE_FILE
+            
+            # Use the Path object for opening the file
+            with open(schema_path, 'r') as file:
+                schema = yaml.safe_load(file)
+
+        except FileNotFoundError:
+            # ... (error handling)
+            print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.REFERENCE_FILE}' was not found.")
+            return {}, None
 
         try:
             jsonschema.validate(instance=data_dict, schema=schema)

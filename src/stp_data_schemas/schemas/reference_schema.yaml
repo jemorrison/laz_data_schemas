@@ -1,0 +1,111 @@
+$schema: http://json-schema.org/draft-2020-12/schema#
+$id: reference_file_schema.yaml
+title: Reference File Meta Schema
+description: Basic definition of the reference file  metadata.
+type: object
+properties:
+  SIMPLE:
+    type: object
+    properties:
+      value:
+        type: boolean
+        default: True
+      description: 
+        type: string
+        default: conforms to FITS standard
+  BITPIX:
+    type: object
+    properties:
+      value:
+        type: [integer,string]
+        default: 'N/A'
+      description:
+        type: string
+        default: array data type
+  TELESCOP:
+    type: object
+    properties:
+      value: 
+        type: string
+        default: 'STP'
+      description: 
+        type: string
+        default: Telescope used to acquire data
+  INSTRUME:
+    type: object
+    properties:
+      value:
+        type: string
+        enum: ['ESC', 'LLOWFS', 'WCC', 'CC']
+      description:
+        type: string
+        default: Instrument
+  ORIGIN:
+    type: object
+    properties:
+      value: 
+        type: string
+        enum: ['UASIM', 'FLIGHT']
+      description:
+        type: string
+        default:  Origin of data
+  DATE:
+    type: object
+    properties:
+      value:
+        type: string
+      description:
+        type: string
+        default: date of file creation. Format yyyy-mm-ddTHH:MM:SS[.sss]
+  TIMESYS:
+    type: object
+    properties:
+      value:
+        type: string
+        default: 'UTC'
+      description:
+        type: string
+        default: principal time system for time-related keywords. UTC for Science data
+  TIMEUNIT:
+    type: object
+    properties:
+      value:
+        type: string
+        default: 's'
+      description:
+        type: string
+        default: Default unit applicable to all time values
+  EXPTIME:
+    type: object
+    properties:
+      value:
+        type: [integer, string]
+        default: 'N/A'
+      description:
+        type: string
+        default: Commanded exposure time in seconds
+  USEAFTER:
+    type: object
+    properties:
+      value:
+        type: string
+      description:
+        type: string
+        default: yyyy-mm-dd UTC data that defines with the file is value
+  FILENAME:
+    type: object
+    properties:
+      value:
+        type: string
+      description:
+        type: string
+        default: Name of file
+  VER_CAL:
+    type: object
+    properties:
+      value:
+        type: string
+        default: '1.0.0'
+      description:
+        type: string
+        default:  Version of the calibration software

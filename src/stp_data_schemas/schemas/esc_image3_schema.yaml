@@ -1,55 +1,68 @@
-$schema: http://json-schema.org/draft-07/schema#
-$id: get_level3_schema.yaml
-title: Science Image Level 3 Schema 
-description: Definition of the science image level 3 FITS file and metadata. Extentions are zero indexed.
+$schema: http://json-schema.org/draft-2020-12/schema#
+$id: esc_image1b_schema.yaml
+title: Science Image Level 1B Schema 
+description: Definition of the science image level 1B FITS file and metadata. Extensions are zero indexed.
 type: object
+required: [NAXIS, NAXIS1, NAXIS2, NAXIS3, data, error, dq]
 properties:
+  meta:
+    $ref: 'core_schema.yaml' 
   NAXIS:
-    extension: 1
-    type: integer
-    description: See FITS standard documentation
-    units: pix
-    value: 3
-    comment:
+    type: object
+    properties:
+      value:
+        type: integer
+      description:
+        type: string
+        default: Number of array dimensions
   NAXIS1:
-    extension: 1
-    type: integer
-    description: See FITS standard documentation
-    units: pix
-    value: 
-    comment:
+    type: object
+    properties:
+      value:
+        type: integer
+      description:
+        type: string
+        default: size of x axis
   NAXIS2:
-    extension: 1
-    type: integer
-    description: See FITS standard documentation
-    units: pix
-    value: 
-    comment:
+    type: object
+    properties:
+      value:
+        type: integer
+      description:
+        type: string
+        default: size of y axis
   NAXIS3:
-    extension: 1
-    type: integer
-    description: See FITS standard documentation
-    units: pix
-    value: 
-    comment:
+    type: object
+    properties:
+      value:
+        type: integer
+      description:
+        type: string
+        default: size of z axis
   data:
     type: array
-    description: Represents 2D science data array
+    description: Represents 3D science data array
     items:
       type: array
       items:
-        type: number
+        type: array
+        items:
+          type: number
   error:
     type: array
-    description: Represents 2D error array
+    description: Represents 3D science error array
     items:
       type: array
       items:
-        type: number
+        type: array
+        items:
+          type: number
   dq:
     type: array
-    description: Represents 2D dq array
+    description: Represents 3D science dq array
     items:
       type: array
+      items:
+        type: array
         items:
           type: integer
