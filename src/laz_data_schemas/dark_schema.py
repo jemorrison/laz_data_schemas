@@ -5,7 +5,7 @@ import jsonschema
 from jsonschema import validate, RefResolver, ValidationError
 from importlib.resources import files
 
-class DQMaskSchemas:
+class DarkSchemas:
     """
     This class contains the definitions for the image interfaces,
     for the coronograph science camera
@@ -17,17 +17,17 @@ class DQMaskSchemas:
 
     """
 
-    RESOURCE_PACKAGE = 'stp_data_schemas.schemas'
+    RESOURCE_PACKAGE = 'laz_data_schemas.schemas'
     REFERENCE_FILE = 'reference_schema.yaml'
-    IMAGE_FILE = 'dqmask_image_schema.yaml'
-
-    def get_dqmask_meta_schema(self) -> dict[str, typing.Any]:
+    IMAGE_FILE = 'dark_image_schema.yaml'
+    
+    def get_dark_meta_schema(self) -> dict[str, typing.Any]:        
         """
         Defines the metadata (fits headers) associated with all data.
 
         Returns:
         -------
-        dq_dict : dictionary
+        meta_dict : dictionary
           Schema converted to dictionary
         """
         try:
@@ -41,7 +41,6 @@ class DQMaskSchemas:
             # ... (error handling)
             print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.REFERENCE_FILE}' was not found.")
             return {}, None
-        
         # Convert the yaml information in a dictionary. Set up values and descriptions and default
         # values. 
         meta_dict = {}
@@ -69,7 +68,6 @@ class DQMaskSchemas:
                 # Extract description
                 meta_dict[key]['description'] = desc_info.get('default', '')
 
-
         return meta_dict
 
 
@@ -81,7 +79,9 @@ class DQMaskSchemas:
         ----------
         data_dict : `dict`
         Dictionary containing information to be validated.
-        
+
+        schema : yaml schema 
+        Configuration schema to be validated against.
         Raises
         ------
         ValidationError:
@@ -91,6 +91,7 @@ class DQMaskSchemas:
         output : `boolean`
         True if successful.
         """
+
         try:
             # Get the path object for the reference file
             schema_path = files(self.RESOURCE_PACKAGE) / self.REFERENCE_FILE
@@ -103,8 +104,6 @@ class DQMaskSchemas:
             # ... (error handling)
             print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.REFERENCE_FILE}' was not found.")
             return {}, None
-
-        
         try:
             jsonschema.validate(instance=data_dict, schema=schema)
             return True
@@ -118,20 +117,18 @@ class DQMaskSchemas:
             return False
 
 
-    
-    def get_dqmask_image_schema(self) -> dict[str, typing.Any]:
+    def get_dark_image_schema(self) -> dict[str, typing.Any]:        
         """
-        Definites the metadata (fits headers) associated with dqmask image
+        Definites the metadata (fits headers) associated with dark image
         for the esc instrument
-
 
         Return:
         -------
         image_dict : dictionary
           schema converted into a dictionary
 
-
         """
+
         try:
             # Get the path object for the image file
             schema_path = files(self.RESOURCE_PACKAGE) / self.IMAGE_FILE
@@ -144,9 +141,8 @@ class DQMaskSchemas:
             print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.IMAGE_FILE}' was not found.")
             return {}, None
         
-
         image_dict = {}
-        mask_schema = None
+        dark_schema = None
         
         # Loop over properties defined in the schema to extract default values
         # set any defaults defined in schema.
@@ -154,8 +150,8 @@ class DQMaskSchemas:
         main_properties = schema_yaml.get('properties', {})
 
         for key,values in main_properties.items():
-            if key == 'mask':
-                mask_schema = values['items']
+            if key == 'data':
+                dark_schema = values['items']
             else:
                 # Check if the 'properties' key exists and contains a 'value' key
                 if 'properties' in values and 'value' in values['properties']:
@@ -168,11 +164,12 @@ class DQMaskSchemas:
                     item['description'] = values.get('description', '')
                     image_dict[key] = item        
 
-        image_dict['mask'] = mask_schema
+        image_dict['dark'] = dark_schema
+        
         return image_dict
 
     
-    def validate_dqmask_image_schema(self, data_dict):
+    def validate_dark_image_schema(self, data_dict):        
         """
         Validate a dictionary against a schema, including external references. 
 
@@ -181,6 +178,11 @@ class DQMaskSchemas:
         data_dict : `dict`
           Dictionary containing information to be validated.
 
+        main_schema : 
+          Configuration schema to be validated against.
+
+        core_schema : 
+          Meta data configuration schema to be validated against.
         Raises
         ------
         ValidationError:
@@ -215,15 +217,16 @@ class DQMaskSchemas:
             print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.IMAGE_FILE}' was not found.")
             return {}, None
 
+
         valid = self.validate_meta_schema(data_dict['meta'])
         if valid is False:
-            print('DQMask meta data did not validate')
+            print('Dark meta data did not validate')
             return False
 
-
-        # The resolver maps schema URIs (like 'dqmask_schema.yaml') to their content
+        
+        # The resolver maps schema URIs (like 'dark_schema.yaml') to their content
         resolver = RefResolver(
-            base_uri='dqmask_image_schema.yaml',  # The base URI of the main schema
+            base_uri='dark_image_schema.yaml',  # The base URI of the main schema
             referrer=main_schema,
             store={'reference.yaml': meta_schema}  # The store holds the content of the external schema
         )
@@ -236,14 +239,17 @@ class DQMaskSchemas:
             print(f"Validation of Image1a failed. Error: {e.message} ")
             return False
 
-        
-    def get_dqmask_schema(self) -> dict[str, typing.Any]:        
-        """
-        """
-        meta_dict = self.get_dqmask_meta_schema()
-        image_dict = self.get_dqmask_image_schema()
 
-        dqmask = {}
-        dqmask['meta'] = meta_dict
-        dqmask['image'] = image_dict
-        return dqmask
+
+    def get_dark_schema(self) -> dict[str, typing.Any]:        
+        """
+        """
+        meta_dict = self.get_dark_meta_schema()
+        
+        image_dict = self.get_dark_image_schema()
+
+        dark = {}
+        dark['meta'] = meta_dict
+        dark['image'] = image_dict
+        return dark
+        

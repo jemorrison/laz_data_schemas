@@ -5,7 +5,7 @@ import jsonschema
 from jsonschema import validate, RefResolver, ValidationError
 from importlib.resources import files
 
-class SatSchemas:
+class DQMaskSchemas:
     """
     This class contains the definitions for the image interfaces,
     for the coronograph science camera
@@ -17,21 +17,19 @@ class SatSchemas:
 
     """
 
-    RESOURCE_PACKAGE = 'stp_data_schemas.schemas'
+    RESOURCE_PACKAGE = 'laz_data_schemas.schemas'
     REFERENCE_FILE = 'reference_schema.yaml'
-    IMAGE_FILE = 'sat_image_schema.yaml'
-    
-    def get_sat_meta_schema(self) -> dict[str, typing.Any]:
+    IMAGE_FILE = 'dqmask_image_schema.yaml'
+
+    def get_dqmask_meta_schema(self) -> dict[str, typing.Any]:
         """
         Defines the metadata (fits headers) associated with all data.
 
-
         Returns:
         -------
-        meta_dict : dictionary
+        dq_dict : dictionary
           Schema converted to dictionary
         """
-
         try:
             # Get the path object for the reference file
             schema_path = files(self.RESOURCE_PACKAGE) / self.REFERENCE_FILE
@@ -43,7 +41,7 @@ class SatSchemas:
             # ... (error handling)
             print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.REFERENCE_FILE}' was not found.")
             return {}, None
-
+        
         # Convert the yaml information in a dictionary. Set up values and descriptions and default
         # values. 
         meta_dict = {}
@@ -71,6 +69,7 @@ class SatSchemas:
                 # Extract description
                 meta_dict[key]['description'] = desc_info.get('default', '')
 
+
         return meta_dict
 
 
@@ -81,8 +80,8 @@ class SatSchemas:
         Parameters
         ----------
         data_dict : `dict`
-           Dictionary containing information to be validated.
-
+        Dictionary containing information to be validated.
+        
         Raises
         ------
         ValidationError:
@@ -92,7 +91,6 @@ class SatSchemas:
         output : `boolean`
         True if successful.
         """
-
         try:
             # Get the path object for the reference file
             schema_path = files(self.RESOURCE_PACKAGE) / self.REFERENCE_FILE
@@ -105,12 +103,13 @@ class SatSchemas:
             # ... (error handling)
             print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.REFERENCE_FILE}' was not found.")
             return {}, None
+
         
         try:
             jsonschema.validate(instance=data_dict, schema=schema)
             return True
         except jsonschema.exceptions.ValidationError as err:
-            print("Data is not valid against the Sat meta Schema.")
+            print("Data is not valid against the DQ meta Schema.")
             print("Validation Error:", err.message)
             return False
         except Exception as e:
@@ -120,18 +119,19 @@ class SatSchemas:
 
 
     
-    def get_sat_image_schema(self) -> dict[str, typing.Any]:
+    def get_dqmask_image_schema(self) -> dict[str, typing.Any]:
         """
-        Definites the metadata (fits headers) associated with sat image
+        Definites the metadata (fits headers) associated with dqmask image
         for the esc instrument
+
 
         Return:
         -------
         image_dict : dictionary
           schema converted into a dictionary
 
-        """
 
+        """
         try:
             # Get the path object for the image file
             schema_path = files(self.RESOURCE_PACKAGE) / self.IMAGE_FILE
@@ -144,10 +144,9 @@ class SatSchemas:
             print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.IMAGE_FILE}' was not found.")
             return {}, None
         
-        
+
         image_dict = {}
-        sat_schema = None
-        nonlin_schema = None
+        mask_schema = None
         
         # Loop over properties defined in the schema to extract default values
         # set any defaults defined in schema.
@@ -155,10 +154,8 @@ class SatSchemas:
         main_properties = schema_yaml.get('properties', {})
 
         for key,values in main_properties.items():
-            if key == 'sat':
-                sat_schema = values['items']
-            elif key == 'nonlin':
-                nonlin_schema = values['items']
+            if key == 'mask':
+                mask_schema = values['items']
             else:
                 # Check if the 'properties' key exists and contains a 'value' key
                 if 'properties' in values and 'value' in values['properties']:
@@ -171,12 +168,11 @@ class SatSchemas:
                     item['description'] = values.get('description', '')
                     image_dict[key] = item        
 
-        image_dict['sat'] = sat_schema
-        image_dict['nonlin'] = nonlin_schema
+        image_dict['mask'] = mask_schema
         return image_dict
 
     
-    def validate_sat_image_schema(self, data_dict):
+    def validate_dqmask_image_schema(self, data_dict):
         """
         Validate a dictionary against a schema, including external references. 
 
@@ -184,7 +180,6 @@ class SatSchemas:
         ----------
         data_dict : `dict`
           Dictionary containing information to be validated.
-
 
         Raises
         ------
@@ -195,6 +190,7 @@ class SatSchemas:
         output : `boolean`
         True if successful.
         """
+
         try:
             # Get the path object for the reference file
             schema_path = files(self.RESOURCE_PACKAGE) / self.REFERENCE_FILE
@@ -221,14 +217,15 @@ class SatSchemas:
 
         valid = self.validate_meta_schema(data_dict['meta'])
         if valid is False:
-            print('Saturation meta data did not validate')
+            print('DQMask meta data did not validate')
             return False
-        
-        # The resolver maps schema URIs (like 'sat_schema.yaml') to their content
+
+
+        # The resolver maps schema URIs (like 'dqmask_schema.yaml') to their content
         resolver = RefResolver(
-            base_uri='sat_image_schema.yaml',  # The base URI of the main schema
+            base_uri='dqmask_image_schema.yaml',  # The base URI of the main schema
             referrer=main_schema,
-            store={'reference_schema.yaml': meta_schema}  # The store holds the content of the external schema
+            store={'reference.yaml': meta_schema}  # The store holds the content of the external schema
         )
         try:
             # Use the resolver during validation
@@ -239,17 +236,14 @@ class SatSchemas:
             print(f"Validation of Image1a failed. Error: {e.message} ")
             return False
 
-
-    def get_sat_schema(self) -> dict[str, typing.Any]:        
+        
+    def get_dqmask_schema(self) -> dict[str, typing.Any]:        
         """
         """
-        meta_dict = self.get_sat_meta_schema()
-        
-        image_dict = self.get_sat_image_schema()
+        meta_dict = self.get_dqmask_meta_schema()
+        image_dict = self.get_dqmask_image_schema()
 
-        sat = {}
-        sat['meta'] = meta_dict
-        sat['image'] = image_dict
-
-        
-        return sat
+        dqmask = {}
+        dqmask['meta'] = meta_dict
+        dqmask['image'] = image_dict
+        return dqmask

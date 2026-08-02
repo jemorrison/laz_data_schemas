@@ -18,7 +18,7 @@ class EscImageSchemas:
 
     """
 
-    RESOURCE_PACKAGE = 'stp_data_schemas.schemas'
+    RESOURCE_PACKAGE = 'laz_data_schemas.schemas'
     REFERENCE_FILE = 'core_schema.yaml'
     IMAGE1A_FILE = 'esc_image1A_schema.yaml'
     IMAGE1B_FILE = 'esc_image1B_schema.yaml'

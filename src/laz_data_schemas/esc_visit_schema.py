@@ -11,7 +11,7 @@ class EscVisitSchemas:
     This class defines the visits of each observation.
     """
 
-    RESOURCE_PACKAGE = 'stp_data_schemas.schemas'
+    RESOURCE_PACKAGE = 'laz_data_schemas.schemas'
     REFERENCE_FILE = 'esc_visit_schema.yaml'
 
     def get_visit_schema(self) -> dict[str, typing.Any]:
