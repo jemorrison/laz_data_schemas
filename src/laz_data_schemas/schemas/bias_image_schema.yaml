@@ -1,12 +1,12 @@
 $schema: http://json-schema.org/draft-2020-12/schema#
-$id: esc_image1A_schema.yaml
-title: Science Image Level 1A Schema 
-description: Definition of the science image level 1 FITS file and metadata. Extensions are zero indexed.
+$id: bias_image_schema.yaml
+title: Science Image Bias Schema 
+description: Definition of the bias image schema
 type: object
 required: [NAXIS, NAXIS1, NAXIS2, data]
 properties:
   meta:
-    $ref: 'core_schema.yaml' 
+    $ref: 'reference.yaml' 
   NAXIS:
     type: object
     properties:
@@ -33,7 +33,7 @@ properties:
         default: size of y axis  
   data:
     type: array
-    description: Represents 2D science data array
+    description: Represents 2D bias array
     items:
       type: array
       items:
