@@ -4,7 +4,7 @@ import os
 from jsonschema import validate, RefResolver, ValidationError
 from importlib.resources import files
 from laz_data_schemas.core_schema import CoreSchemas
-
+import numpy as np
 
 class EscImageSchemas:
     """
@@ -321,14 +321,21 @@ class EscImageSchemas:
             print('Level1 image meta data did not validate')
             return False
 
-        # 4. Resolve core_schema.yaml reference and validate main payload
+
+        # 4. Prepare data payload for validation (convert NumPy arrays to lists)
+        payload_to_validate = data_dict.copy()
+        for array_key in ['data', 'error', 'dq']:
+            if isinstance(payload_to_validate.get(array_key), np.ndarray):
+                payload_to_validate[array_key] = payload_to_validate[array_key].tolist()
+            
+        # 5. Resolve core_schema.yaml reference and validate main payload
         try:
             resolver = RefResolver(
                 base_uri='esc_image1B_schema.yaml',
                 referrer=main_schema,
                 store={'core_schema.yaml': core_schema}
             )
-            validate(instance=data_dict, schema=main_schema, resolver=resolver)
+            validate(instance=payload_to_validate, schema=main_schema, resolver=resolver)
             return True 
         except ValidationError as e:
             print(f"Validation of Image1B failed. Error: {e.message}")
@@ -358,7 +365,7 @@ class EscImageSchemas:
             print(f"Error: The resource '{self.RESOURCE_PACKAGE}/{self.REFERENCE_FILE}' was not found.")
             return False
 
-        # 2. Load Level 1B Schema
+        # 2. Load Level 2 Schema
         try:
             schema_path = files(self.RESOURCE_PACKAGE) / self.IMAGE2_FILE
             with open(schema_path, 'r') as file:
@@ -373,14 +380,20 @@ class EscImageSchemas:
             print('Level1 image meta data did not validate')
             return False
 
-        # 4. Resolve core_schema.yaml reference and validate main payload
+        # 4. Prepare data payload for validation (convert NumPy arrays to lists)
+        payload_to_validate = data_dict.copy()
+        for array_key in ['data', 'error', 'dq']:
+            if isinstance(payload_to_validate.get(array_key), np.ndarray):
+                payload_to_validate[array_key] = payload_to_validate[array_key].tolist()
+                
+        # 5. Resolve core_schema.yaml reference and validate main payload
         try:
             resolver = RefResolver(
                 base_uri='esc_image2_schema.yaml',
                 referrer=main_schema,
                 store={'core_schema.yaml': core_schema}
             )
-            validate(instance=data_dict, schema=main_schema, resolver=resolver)
+            validate(instance=payload_to_validate, schema=main_schema, resolver=resolver)
             return True 
         except ValidationError as e:
             print(f"Validation of Image1B failed. Error: {e.message}")
