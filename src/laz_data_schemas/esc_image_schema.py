@@ -15,7 +15,6 @@ class EscImageSchemas:
     (https://fits.gsfc.nasa.gov/standard40/fits_standard40aa-le.pdf).
 
     Units shall be consistent with AstroPy units.
-
     """
 
     RESOURCE_PACKAGE = 'laz_data_schemas.schemas'
